@@ -18,3 +18,20 @@ exports.wrapper = function (callback) {
     callback(null, data);
   };
 };
+
+exports.getLatest = function (callback) {
+  return function (err, data) {
+    if (err) {
+      err.name = 'DingTalkAPI' + err.name;
+      return callback(err, data);
+    }
+    data = data.body;
+    if (data.errcode) {
+      err = new Error(data.errmsg);
+      err.name = 'DingTalkAPIError';
+      err.code = data.errcode;
+      return callback(err, data);
+    }
+    callback(null, data);
+  };
+};

@@ -1,27 +1,31 @@
 var agent = require('superagent');
+var crypto = require('crypto');
 var util = require('./util');
 var BASE_URL = 'https://oapi.dingtalk.com';
 var TOKEN_EXPIRES_IN = 1000 * 60 * 60 * 2 - 10000 //1小时59分50秒.防止网络延迟
 
-var Api = function(conf){
-  if(typeof conf === 'string'){
+var Api = function(conf) {
+  if (typeof conf === 'string') {
 
     this.token_cache = {
       value: conf,
-      expires : Infinity
+      expires: Infinity
     };
-    
-  }else{ 
+
+  } else {
 
     this.corpid = conf.corpid;
     this.secret = conf.secret;
     this.SSOsecret = conf.SSOsecret;
     this.token_cache = null;
-    this.getToken = conf.getToken || function (callback) {
+    this.getJsApiTicket = conf.getJsApiTicket;
+    this.saveJsApiTicket = conf.saveJsApiTicket;
+
+    this.getToken = conf.getToken || function(callback) {
       callback(null, this.token_cache);
     };
 
-    this.saveToken = conf.saveToken || function (token, callback) {
+    this.saveToken = conf.saveToken || function(token, callback) {
       this.token_cache = token;
       if (process.env.NODE_ENV === 'production') {
         console.warn('Don\'t save token in memory, when cluster or multi-computer!');
@@ -35,7 +39,10 @@ var Api = function(conf){
 Api.prototype._get_access_token = function(callback) {
   var self = this;
   agent.get(BASE_URL + '/gettoken')
-    .query({corpid: self.corpid, corpsecret: self.secret})
+    .query({
+      corpid: self.corpid,
+      corpsecret: self.secret
+    })
     .end(util.wrapper(callback));
 };
 
@@ -52,8 +59,8 @@ Api.prototype.getLatestToken = function(callback) {
     });
   } else {
     var now = Date.now();
-    console.log(self.token_cache);
-    if (self.token_cache.expires  <= now) {
+
+    if (self.token_cache.expires <= now) {
 
       self._get_access_token(function(err, token) {
         if (err) {
@@ -82,132 +89,156 @@ Api.prototype.getLatestToken = function(callback) {
 Api.prototype.getSSOToken = function(callback) {
   var self = this;
   agent.get(BASE_URL + '/sso/gettoken')
-    .query({corpid: self.corpid, corpsecret: self.SSOsecret})
+    .query({
+      corpid: self.corpid,
+      corpsecret: self.SSOsecret
+    })
     .end(util.wrapper(callback));
 };
 
 //部门
-Api.prototype.getDepartments  = function(callback) {
+Api.prototype.getDepartments = function(callback) {
   var self = this;
-  
-  self.getLatestToken(function(err, token){
-    if(err){
+
+  self.getLatestToken(function(err, token) {
+    if (err) {
       return callback(err);
     };
     agent.get(BASE_URL + '/department/list')
-      .query({access_token:token.value})
+      .query({
+        access_token: token.value
+      })
       .end(util.wrapper(callback));
   });
 }
 
-Api.prototype.getDepartmentDetail  = function(id, callback) {
+Api.prototype.getDepartmentDetail = function(id, callback) {
   var self = this;
-  self.getLatestToken(function(err, token){
-    if(err){
+  self.getLatestToken(function(err, token) {
+    if (err) {
       return callback(err);
     };
     agent.get(BASE_URL + '/department/get')
-      .query({id:id, access_token:token.value})
+      .query({
+        id: id,
+        access_token: token.value
+      })
       .end(util.wrapper(callback));
   });
 }
 
-Api.prototype.createDepartment  = function(name, opts, callback) {
+Api.prototype.createDepartment = function(name, opts, callback) {
   var self = this;
-  self.getLatestToken(function(err, token){
-    if(err){
+  self.getLatestToken(function(err, token) {
+    if (err) {
       return callback(err);
     };
 
-    if(typeof opts === 'object'){
+    if (typeof opts === 'object') {
       opts.name = name;
       opts.parentid = opts.parentid || 1;
-    }else{
+    } else {
       opts = {
-        name : name,
-        parentid : opts
+        name: name,
+        parentid: opts
       }
     }
     agent.post(BASE_URL + '/department/create')
-      .query({access_token:token.value})
+      .query({
+        access_token: token.value
+      })
       .send(opts)
       .end(util.wrapper(callback));
   });
 }
 
-Api.prototype.updateDepartment  = function(id, opts, callback) {
+Api.prototype.updateDepartment = function(id, opts, callback) {
   var self = this;
-  self.getLatestToken(function(err, token){
-    if(err){
+  self.getLatestToken(function(err, token) {
+    if (err) {
       return callback(err);
     };
 
-    if(typeof opts === 'object'){
+    if (typeof opts === 'object') {
       opts.id = id;
-    }else{
+    } else {
       opts = {
-        name : opts,
-        id : id
+        name: opts,
+        id: id
       }
     }
     agent.post(BASE_URL + '/department/update')
-      .query({access_token:token.value})
+      .query({
+        access_token: token.value
+      })
       .send(opts)
       .end(util.wrapper(callback));
   });
 }
 
-Api.prototype.deleteDepartment  = function(id, callback) {
+Api.prototype.deleteDepartment = function(id, callback) {
   var self = this;
-  self.getLatestToken(function(err, token){
-    if(err){
+  self.getLatestToken(function(err, token) {
+    if (err) {
       return callback(err);
     };
 
     agent.get(BASE_URL + '/department/delete')
-      .query({id: id, access_token:token.value})
+      .query({
+        id: id,
+        access_token: token.value
+      })
       .end(util.wrapper(callback));
   });
 }
 
 
 //用户
-Api.prototype.getDepartmentUsers  = function(id, callback) {
+Api.prototype.getDepartmentUsers = function(id, callback) {
   var self = this;
-  self.getLatestToken(function(err, token){
-    if(err){
+  self.getLatestToken(function(err, token) {
+    if (err) {
       return callback(err);
     };
 
     agent.get(BASE_URL + '/user/simplelist')
-      .query({department_id: id, access_token:token.value})
+      .query({
+        department_id: id,
+        access_token: token.value
+      })
       .end(util.wrapper(callback));
   });
 }
 
-Api.prototype.getDepartmentUsersDetail  = function(id, callback) {
+Api.prototype.getDepartmentUsersDetail = function(id, callback) {
   var self = this;
-  self.getLatestToken(function(err, token){
-    if(err){
+  self.getLatestToken(function(err, token) {
+    if (err) {
       return callback(err);
     };
 
     agent.get(BASE_URL + '/user/list')
-      .query({department_id: id, access_token:token.value})
+      .query({
+        department_id: id,
+        access_token: token.value
+      })
       .end(util.wrapper(callback));
   });
 }
 
 
-Api.prototype.getUser  = function(id, callback) {
+Api.prototype.getUser = function(id, callback) {
   var self = this;
-  self.getLatestToken(function(err, token){
-    if(err){
+  self.getLatestToken(function(err, token) {
+    if (err) {
       return callback(err);
     };
 
     agent.get(BASE_URL + '/user/get')
-      .query({userid: id, access_token:token.value})
+      .query({
+        userid: id,
+        access_token: token.value
+      })
       .end(util.wrapper(callback));
   });
 }
@@ -256,7 +287,7 @@ Api.prototype.getUserInfoByCode = function(code, callback) {
 
     agent.get(BASE_URL + '/user/getuserinfo')
       .query({
-        code : code, 
+        code: code,
         access_token: token.value
       })
       .end(util.wrapper(callback));
@@ -271,12 +302,162 @@ Api.prototype.getSSOUserInfoByCode = function(code, callback) {
     };
     agent.get(BASE_URL + '/sso/getuserinfo')
       .query({
-        code : code, 
+        code: code,
         access_token: token.access_token
       })
       .end(util.wrapper(callback));
   });
 };
+
+
+
+
+
+Api.prototype._get_jsApi_ticket = function(callback) {
+  var self = this;
+  self.getLatestToken(function(err, token) {
+    if (err) {
+      return callback(err);
+    };
+    agent.get(BASE_URL + '/get_jsapi_ticket')
+      .query({
+        type: 'jsapi',
+        access_token: token.value
+      })
+      .end(util.wrapper(callback));
+  });
+};
+
+
+
+
+/*Api.prototype.getLatest = function(key, dd) {
+  var self = this;
+  var cache = self[key + 'Cache'];
+  var save = self['save' + key];
+  var get = self['get' + key];
+
+  function _getLatest(callback) {
+    if (!cache) {
+
+      get(function(err, data) {
+        if (err) {
+          return callback(err);
+        } else {
+          self.jsapi_ticket_cache = data;
+          self.getLatestJsApiTicket(callback);
+        }
+      });
+    }
+  }
+  return _getLatest;
+}*/
+
+
+Api.prototype.getLatestJsApiTicket = function(callback) {
+  var self = this;
+
+  if (!self.jsapi_ticket_cache) {
+    self.getJsApiTicket(function(err, data) {
+      if (err) {
+        return callback(err);
+      } else {
+        self.jsapi_ticket_cache = data;
+        self.getLatestJsApiTicket(callback);
+      }
+    });
+  } else {
+    var now = Date.now();
+    if (self.jsapi_ticket_cache.expires <= now) {
+
+      self._get_jsApi_ticket(function(err, data) {
+        if (err) {
+          return callback(err);
+        } else {
+          data = {
+            value: data.ticket,
+            expires: now + self.token_expires_in
+          }
+          self.saveJsApiTicket(data, function(err) {
+            if (err) {
+              return callback(err);
+            }
+            self.jsapi_ticket_cache = data;
+            callback(null, data);
+          });
+        }
+      });
+    } else {
+      callback(null, this.jsapi_ticket_cache);
+    }
+  }
+}
+
+
+var createNonceStr = function () {
+  return Math.random().toString(36).substr(2, 15);
+};
+
+var raw = function (newArgs) {
+  var arr = [];
+  for (var k in newArgs) {
+    arr.push(k + '=' + newArgs[k]);
+  }
+  return arr.join('&');
+};
+
+var sign = function (ret) {
+  var string = raw(ret);
+  var shasum = crypto.createHash('sha1');
+  shasum.update(string);
+  return shasum.digest('hex');
+};
+
+
+
+/*Api.prototype.generate = function(param, callback){
+
+
+}*/
+
+Api.prototype.getJsConfig = function(url, callback){
+  var self = this;
+  self.getLatestJsApiTicket(function(err, data){
+    if(err){
+      return callback(err);
+    }
+
+    var result = {
+      noncestr : createNonceStr(),
+      jsapi_ticket : data.value,
+      timestamp : Date.now()
+    }
+
+    result.signature = sign(result);
+    delete(result.jsapi_ticket);
+
+    callback(null, result);
+  });
+}
+
+
+Api.CtrlBySuite = function(newSuiteApi, conf) {
+  for(var i in conf){
+    this[i] = conf[i];
+  }
+  this.newSuiteApi = newSuiteApi;
+}
+
+Api.CtrlBySuite.prototype.ctrl = function(corpid, permanent_code) {
+  this.corpid = corpid;
+  var api = new Api(this);
+  console.log(api);
+  var newSuiteApi = this.newSuiteApi;
+  api._get_access_token = function(callback) {
+    newSuiteApi.getCorpToken(corpid, permanent_code, callback);
+  }
+  return api;
+}
 
 
 module.exports = Api;
