@@ -45,13 +45,18 @@ var api = new DD_enterprise(config);
 ```
 ###用ISV套件操作企业号？OK
 ```js
-var suiteCtrlE = new M_enterprise.CtrlBySuite(newSuiteApi, config);
 //newSuiteApi: 一个dingtalk_suite实例。
-
+var suiteCtrlE = new M_enterprise.CtrlBySuite(newSuiteApi, config);
 //只需传入corpid, 和企业号的永久授权码就能控制企业号。
 var api = suiteCtrlE.ctrl(corpid, permanent_code);
 ```
 ___注___:ISV套件主动调用api见： [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
+
+如果你已经得到有效的token,可以直接用access_token创建。
+```js
+var api = new M_enterprise(access_token);
+```
+
 ##接口方法
 ####获得部门列表
 ```js
