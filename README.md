@@ -1,4 +1,4 @@
-# dingtalk enterprise
+# dingtalk enterprise(待更新）
 钉钉企业号**API**,自带**cache**. 
 
 并自带**ISV**套件操纵接口。ISV套件主动调用api见： [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
