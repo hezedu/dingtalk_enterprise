@@ -1,7 +1,5 @@
 # dingtalk enterprise(待更新）
-钉钉企业号**API**,自带**cache**. 
-
-并自带**ISV**套件操纵接口。ISV套件主动调用api见： [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
+钉钉企业号**API**,自带**cache**，并自带**ISV**套件操纵接口。
 ##示例
 ####config:
 ```js
@@ -47,12 +45,12 @@ var api = new DD_enterprise(config);
 ```
 ##用ISV套件操作企业号？OK
 ```js
-//newSuiteApi: 一个dingtalk_suite实例。
 var suiteCtrlE = new M_enterprise.CtrlBySuite(newSuiteApi, config);
+//newSuiteApi: 一个dingtalk_suite实例。
 
 var api = suiteCtrlE.ctrl(corpid, permanent_code);
 ```
-
+___注：___ISV套件主动调用api见： [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
 ##接口方法
 ####获得部门列表
 ```js
