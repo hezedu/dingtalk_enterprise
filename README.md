@@ -48,6 +48,7 @@ var api = new DD_enterprise(config);
 var suiteCtrlE = new M_enterprise.CtrlBySuite(newSuiteApi, config);
 //newSuiteApi: 一个dingtalk_suite实例。
 
+//只需传入corpid, 和企业号的永久授权码就能控制企业号。
 var api = suiteCtrlE.ctrl(corpid, permanent_code);
 ```
 ___注___:ISV套件主动调用api见： [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
