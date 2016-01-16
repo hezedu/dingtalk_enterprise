@@ -50,7 +50,7 @@ var suiteCtrlE = new M_enterprise.CtrlBySuite(newSuiteApi, config);
 
 var api = suiteCtrlE.ctrl(corpid, permanent_code);
 ```
-___注：___ISV套件主动调用api见： [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
+___注___:ISV套件主动调用api见： [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
 ##接口方法
 ####获得部门列表
 ```js
