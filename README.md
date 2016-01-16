@@ -43,7 +43,7 @@ var config = {
 ```js
 var api = new DD_enterprise(config);
 ```
-##用ISV套件操作企业号？OK
+###用ISV套件操作企业号？OK
 ```js
 var suiteCtrlE = new M_enterprise.CtrlBySuite(newSuiteApi, config);
 //newSuiteApi: 一个dingtalk_suite实例。
