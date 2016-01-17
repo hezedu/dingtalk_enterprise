@@ -44,32 +44,40 @@ var config = {
 var api = new DD_enterprise(config);
 ```
 ###用ISV套件操作企业号？OK
+一、只需要两个参数：
 ```js
 //newSuiteApi: 一个dingtalk_suite实例。
-var suiteCtrlE = new M_enterprise.CtrlBySuite(newSuiteApi, config);
+var suiteCtrlE = new DD_enterprise.CtrlBySuite(newSuiteApi, config);
 //只需传入corpid, 和企业号的永久授权码就能控制企业号。
 var api = suiteCtrlE.ctrl(corpid, permanent_code);
 ```
+二、如果你获取永久授权码的同时，获得了token，可以加上第三个参数，这样可以省一次数据库查询。
+```js
+//newSuiteApi: 一个dingtalk_suite实例。
+var suiteCtrlE = new DD_enterprise.CtrlBySuite(newSuiteApi, config);
+//token为Object : value , expires
+var api = suiteCtrlE.ctrl(corpid, permanent_code, token);
+```
 ___注___:ISV套件主动调用api见： [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
-
-如果你已经得到有效的token,可以直接用access_token创建。<br>
-`var api = new M_enterprise(access_token);`
+三、如果你已经得到有效的token,可以直接用access_token创建。
+```js
+//access_token 为 String 格式。
+var api = new DD_enterprise(access_token)
+```
 
 ##接口方法
-####获得部门列表
-```js
-api.getDepartments(callback)
-```
-####获得部门详情
-```js
-api.getDepartmentDetail(id, callback)
-```
-####创建部门
-```js
-/*
-name: 部门名字
-*/
+####getDepartments(callback)
+获得部门列表
 
-api.createDepartment(name, opts, callback)
+####getDepartmentDetail(id, callback)
+获得部门详情
+####createDepartment(name, opts, callback)
+创建部门，例：
+```js
+//名字，父id
+api.createDepartment('部门一', 1, callback)
+//名字，父id
+api.createDepartment('部门一', {parentid: 1, order:1}, callback)
 ```
+
 
