@@ -86,17 +86,8 @@ Api.prototype.getLatestToken = function(callback) {
 }
 
 
-Api.prototype.getSSOToken = function(callback) {
-  var self = this;
-  agent.get(BASE_URL + '/sso/gettoken')
-    .query({
-      corpid: self.corpid,
-      corpsecret: self.SSOsecret
-    })
-    .end(util.wrapper(callback));
-};
+//=============================== 部门 ===============================
 
-//部门
 Api.prototype.getDepartments = function(callback) {
   var self = this;
 
@@ -192,8 +183,43 @@ Api.prototype.deleteDepartment = function(id, callback) {
   });
 }
 
+//=============================== 微应用 ===============================
 
-//用户
+Api.prototype.createMicroApp = function(data, callback) {
+  var self = this;
+  self.getLatestToken(function(err, token) {
+    if (err) {
+      return callback(err);
+    };
+
+    agent.post(BASE_URL + '/microapp/create')
+      .query({
+        access_token: token.value
+      })
+      .send(data)
+      .end(util.wrapper(callback));
+  });
+};
+
+//=============================== 消息 ===============================
+//
+Api.prototype.sendToConversation = function(callback) {
+  var self = this;
+  self.getLatestToken(function(err, token) {
+    if (err) {
+      return callback(err);
+    };
+
+    agent.post(BASE_URL + '/message/send_to_conversation')
+      .query({
+        access_token: token.value
+      })
+      .end(util.wrapper(callback));
+  });
+};
+
+//=============================== 用户 ===============================
+
 Api.prototype.getDepartmentUsers = function(id, callback) {
   var self = this;
   self.getLatestToken(function(err, token) {
@@ -243,40 +269,6 @@ Api.prototype.getUser = function(id, callback) {
   });
 }
 
-//微应用
-
-Api.prototype.createMicroApp = function(data, callback) {
-  var self = this;
-  self.getLatestToken(function(err, token) {
-    if (err) {
-      return callback(err);
-    };
-
-    agent.post(BASE_URL + '/microapp/create')
-      .query({
-        access_token: token.value
-      })
-      .send(data)
-      .end(util.wrapper(callback));
-  });
-};
-
-//消息
-Api.prototype.sendToConversation = function(callback) {
-  var self = this;
-  self.getLatestToken(function(err, token) {
-    if (err) {
-      return callback(err);
-    };
-
-    agent.post(BASE_URL + '/message/send_to_conversation')
-      .query({
-        access_token: token.value
-      })
-      .end(util.wrapper(callback));
-  });
-};
-
 //登录
 Api.prototype.getUserInfoByCode = function(code, callback) {
   var self = this;
@@ -294,6 +286,19 @@ Api.prototype.getUserInfoByCode = function(code, callback) {
   });
 };
 
+//=============================== SSO ===============================
+
+Api.prototype.getSSOToken = function(callback) {
+  var self = this;
+  agent.get(BASE_URL + '/sso/gettoken')
+    .query({
+      corpid: self.corpid,
+      corpsecret: self.SSOsecret
+    })
+    .end(util.wrapper(callback));
+};
+
+//登录
 Api.prototype.getSSOUserInfoByCode = function(code, callback) {
   var self = this;
   self.getSSOToken(function(err, token) {
@@ -310,8 +315,7 @@ Api.prototype.getSSOUserInfoByCode = function(code, callback) {
 };
 
 
-
-
+//=============================== jsApi Ticket ===============================
 
 Api.prototype._get_jsApi_ticket = function(callback) {
   var self = this;
@@ -327,7 +331,6 @@ Api.prototype._get_jsApi_ticket = function(callback) {
       .end(util.wrapper(callback));
   });
 };
-
 
 
 
@@ -394,11 +397,11 @@ Api.prototype.getLatestJsApiTicket = function(callback) {
 }
 
 
-var createNonceStr = function () {
+var createNonceStr = function() {
   return Math.random().toString(36).substr(2, 15);
 };
 
-var raw = function (newArgs) {
+var raw = function(newArgs) {
   var arr = [];
   for (var k in newArgs) {
     arr.push(k + '=' + newArgs[k]);
@@ -406,7 +409,7 @@ var raw = function (newArgs) {
   return arr.join('&');
 };
 
-var sign = function (ret) {
+var sign = function(ret) {
   var string = raw(ret);
   var shasum = crypto.createHash('sha1');
   shasum.update(string);
@@ -420,17 +423,17 @@ var sign = function (ret) {
 
 }*/
 
-Api.prototype.getJsConfig = function(url, callback){
+Api.prototype.getJsConfig = function(url, callback) {
   var self = this;
-  self.getLatestJsApiTicket(function(err, data){
-    if(err){
+  self.getLatestJsApiTicket(function(err, data) {
+    if (err) {
       return callback(err);
     }
 
     var result = {
-      noncestr : createNonceStr(),
-      jsapi_ticket : data.value,
-      timestamp : Date.now()
+      noncestr: createNonceStr(),
+      jsapi_ticket: data.value,
+      timestamp: Date.now()
     }
 
     result.signature = sign(result);
@@ -440,18 +443,33 @@ Api.prototype.getJsConfig = function(url, callback){
   });
 }
 
+//=============================== ISV Suite Ctrl ===============================
 
 Api.CtrlBySuite = function(newSuiteApi, conf) {
-  for(var i in conf){
+  for (var i in conf) {
     this[i] = conf[i];
   }
   this.newSuiteApi = newSuiteApi;
 }
 
-Api.CtrlBySuite.prototype.ctrl = function(corpid, permanent_code) {
-  this.corpid = corpid;
+Api.CtrlBySuite.prototype.ctrl = function(corpid, permanent_code, token) {
+
+  if (typeof corpid === 'object') { //考虑到SSO，所以多加了个选择
+    if(corpid.token){
+      this.token_cache = corpid.token;
+      delete(corpid.token);
+    }
+    permanent_code = corpid.permanent_code;
+    for (var i in corpid) {
+      this[i] = corpid[i];
+    }
+
+  } else {
+    this.corpid = corpid;
+    this.token_cache = token;
+  }
+
   var api = new Api(this);
-  console.log(api);
   var newSuiteApi = this.newSuiteApi;
   api._get_access_token = function(callback) {
     newSuiteApi.getCorpToken(corpid, permanent_code, callback);
