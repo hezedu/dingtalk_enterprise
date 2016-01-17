@@ -1,0 +1,27 @@
+{
+  "name": "dingtalk_enterprise",
+  "version": "0.0.1",
+  "main": "index",
+  "keywords": [
+    "dingtalk",
+    "enterprise",
+    "ISV",
+    "nodejs"
+  ],
+  "author": {
+    "name": "hezedu"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hezedu/dingtalk_enterprise.git"
+  },
+  "dependencies": {
+    "superagent": "^1.6.1"
+  },
+  "licenses": "MIT",
+  "email": "hezedu@hotmail.com",
+  "description": "nodejs钉钉企业号API",
+  "bugs": {
+    "url": "https://github.com/hezedu/dingtalk_enterprise/issues"
+  }
+}
