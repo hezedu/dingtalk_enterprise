@@ -76,7 +76,7 @@ var api = new DD_enterprise(access_token)
 ```js
 //名字，父id
 api.createDepartment('部门一', 1, callback)
-//名字，父id
+//名字，详细配置
 api.createDepartment('部门一', {parentid: 1, order:1}, callback)
 ```
 
