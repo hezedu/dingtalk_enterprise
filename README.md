@@ -59,6 +59,7 @@ var suiteCtrlE = new DD_enterprise.CtrlBySuite(newSuiteApi, config);
 var api = suiteCtrlE.ctrl(corpid, permanent_code, token);
 ```
 ___注___:ISV套件主动调用api见： [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
+
 三、如果你已经得到有效的token,可以直接用access_token创建。
 ```js
 //access_token 为 String 格式。
