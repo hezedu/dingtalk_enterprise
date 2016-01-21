@@ -11,6 +11,14 @@ var Api = function(conf) {
       value: conf,
       expires: Infinity
     };
+    
+    if(arguments[1]){
+      this.jsapi_ticket_cache = {
+        value: arguments[1],
+        expires: Infinity
+      };
+    }
+
 
   } else {
 
@@ -18,6 +26,7 @@ var Api = function(conf) {
     this.secret = conf.secret;
     this.SSOsecret = conf.SSOsecret;
     this.token_cache = null;
+    this.jsapi_ticket_cache = null;
     this.getJsApiTicket = conf.getJsApiTicket;
     this.saveJsApiTicket = conf.saveJsApiTicket;
 
@@ -443,7 +452,7 @@ Api.prototype.getUrlSign = function(url, callback) {
       timestamp: Date.now(),
       url: url
     }
-    
+
     var signature = sign(result);
     result = {
       signature: signature,
@@ -463,11 +472,12 @@ Api.CtrlBySuite = function(newSuiteApi, conf) {
   this.newSuiteApi = newSuiteApi;
 }
 
-Api.CtrlBySuite.prototype.ctrl = function(corpid, permanent_code, token) {
+Api.CtrlBySuite.prototype.ctrl = function(corpid, permanent_code, token_cache, jsapi_ticket_cache) {
 
-  if (typeof corpid === 'object') { //考虑到SSO，所以多加了个选择
+/*  if (typeof corpid === 'object') { //考虑到SSO，所以多加了个选择
     if(corpid.token){
       this.token_cache = corpid.token;
+      this.jsapi_ticket_cache = corpid.jsapi_ticket;
       delete(corpid.token);
     }
     permanent_code = corpid.permanent_code;
@@ -476,9 +486,12 @@ Api.CtrlBySuite.prototype.ctrl = function(corpid, permanent_code, token) {
     }
 
   } else {
-    this.corpid = corpid;
-    this.token_cache = token;
-  }
+
+  }*/
+
+  this.corpid = corpid;
+  this.token_cache = token_cache;
+  this.jsapi_ticket_cache = jsapi_ticket_cache;
 
   var api = new Api(this);
   var newSuiteApi = this.newSuiteApi;
