@@ -401,12 +401,19 @@ var createNonceStr = function() {
   return Math.random().toString(36).substr(2, 15);
 };
 
-var raw = function(newArgs) {
-  var arr = [];
+var raw = function (args) {
+  var keys = Object.keys(args);
+  keys = keys.sort();
+  var newArgs = {};
+  keys.forEach(function (key) {
+    newArgs[key] = args[key];
+  });
+
+  var string = '';
   for (var k in newArgs) {
-    arr.push(k + '=' + newArgs[k]);
+    string += '&' + k + '=' + newArgs[k];
   }
-  return arr.join('&');
+  return string.substr(1);
 };
 
 var sign = function(ret) {
@@ -423,7 +430,7 @@ var sign = function(ret) {
 
 }*/
 
-Api.prototype.getJsConfig = function(url, callback) {
+Api.prototype.getUrlSign = function(url, callback) {
   var self = this;
   self.getLatestJsApiTicket(function(err, data) {
     if (err) {
@@ -433,12 +440,16 @@ Api.prototype.getJsConfig = function(url, callback) {
     var result = {
       noncestr: createNonceStr(),
       jsapi_ticket: data.value,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      url: url
     }
-
-    result.signature = sign(result);
-    delete(result.jsapi_ticket);
-
+    
+    var signature = sign(result);
+    result = {
+      signature: signature,
+      timeStamp: result.timestamp,
+      nonceStr: result.noncestr
+    }
     callback(null, result);
   });
 }
