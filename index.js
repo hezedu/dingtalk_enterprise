@@ -491,6 +491,7 @@ Api.CtrlBySuite.prototype.ctrl = function(corpid, permanent_code, token_cache, j
 
   this.corpid = corpid;
   this.token_cache = token_cache;
+  this.SSOSecret = this.newSuiteApi.SSOSecret;
   this.jsapi_ticket_cache = jsapi_ticket_cache;
 
   var api = new Api(this);
