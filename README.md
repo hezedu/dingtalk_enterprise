@@ -8,7 +8,7 @@ var DD_enterprise = require('dingtalk_enterprise');
 var config = {
   corpid : 'xxxxxxxxxxxxxxxx', //ISV套件控制的话，可不填
   secret : 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx', //ISV套件控制的话，可不填
-  SSOsecret : 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', //可选，后台Admin登录用的。
+  SSOSecret : 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', //可选，后台Admin登录用的。
   getToken : function(callback){
     //从数据库中取出Token，返回的data样式为：{value: 'xxxxxxx', expires:1452735301543}
     fs.readFile(this.suiteid + 'token.txt',function(err, data){
