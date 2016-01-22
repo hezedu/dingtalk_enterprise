@@ -24,7 +24,7 @@ var Api = function(conf) {
 
     this.corpid = conf.corpid;
     this.secret = conf.secret;
-    this.SSOsecret = conf.SSOsecret;
+    this.SSOSecret = conf.SSOSecret;
     this.token_cache = null;
     this.jsapi_ticket_cache = null;
     this.getJsApiTicket = conf.getJsApiTicket;
@@ -302,7 +302,7 @@ Api.prototype.getSSOToken = function(callback) {
   agent.get(BASE_URL + '/sso/gettoken')
     .query({
       corpid: self.corpid,
-      corpsecret: self.SSOsecret
+      corpsecret: self.SSOSecret
     })
     .end(util.wrapper(callback));
 };
@@ -491,7 +491,6 @@ Api.CtrlBySuite.prototype.ctrl = function(corpid, permanent_code, token_cache, j
 
   this.corpid = corpid;
   this.token_cache = token_cache;
-  this.SSOSecret = this.newSuiteApi.SSOSecret;
   this.jsapi_ticket_cache = jsapi_ticket_cache;
 
   var api = new Api(this);
