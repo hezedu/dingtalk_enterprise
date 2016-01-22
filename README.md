@@ -8,7 +8,7 @@ var DD_enterprise = require('dingtalk_enterprise');
 var config = {
   corpid : 'xxxxxxxxxxxxxxxx', //ISV套件控制的话，可不填
   secret : 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx', //ISV套件控制的话，可不填
-  SSOsecret : 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', //可选，后台Admin登录用的。
+  SSOSecret : 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', //可选，后台Admin登录用的。
   getToken : function(callback){
     //从数据库中取出Token，返回的data样式为：{value: 'xxxxxxx', expires:1452735301543}
     fs.readFile(this.suiteid + 'token.txt',function(err, data){
@@ -44,26 +44,31 @@ var config = {
 var api = new DD_enterprise(config);
 ```
 ###用ISV套件操作企业号？OK
-一、只需要两个参数：
+只需要两个参数：
 ```js
 //newSuiteApi: 一个dingtalk_suite实例。
 var suiteCtrlE = new DD_enterprise.CtrlBySuite(newSuiteApi, config);
 //只需传入corpid, 和企业号的永久授权码就能控制企业号。
 var api = suiteCtrlE.ctrl(corpid, permanent_code);
 ```
-二、如果你获取永久授权码的同时，获得了token，可以加上第三个参数，这样可以省一次数据库查询。
+如果你获取永久授权码的同时，获得了token_cache，可以加上第三个参数，这样可以省一次数据库查询。
 ```js
-//newSuiteApi: 一个dingtalk_suite实例。
-var suiteCtrlE = new DD_enterprise.CtrlBySuite(newSuiteApi, config);
-//token为Object : value , expires
-var api = suiteCtrlE.ctrl(corpid, permanent_code, token);
+//token为Object格式 key为: value , expires
+var api = suiteCtrlE.ctrl(corpid, permanent_code, token_cache);
+```
+如果你获取永久授权码的同时，获得了token_cache和jsapi_ticket_cache，可以加上第四个参数，这样可以省两次数据库查询。
+```js
+//token和jsapi_ticket_cache为Object格式 key为: value , expires
+var api = suiteCtrlE.ctrl(corpid, permanent_code, token_cache, jsapi_ticket_cache);
 ```
 ___注___:ISV套件主动调用api见： [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
 
-三、如果你已经得到有效的token,可以直接用access_token创建。
+如果你已经得到有效的token或token，jsapi_ticket,可以直接用access_token创建。
 ```js
 //access_token 为 String 格式。
-var api = new DD_enterprise(access_token)
+var api = new DD_enterprise(access_token);
+//access_token,jsapi_ticket 为 String 格式。
+var api = new DD_enterprise(access_token, jsapi_ticket);
 ```
 
 ##接口方法
