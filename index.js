@@ -11,7 +11,7 @@ var Api = function(conf) {
       value: conf,
       expires: Infinity
     };
-    
+
     if(arguments[1]){
       this.jsapi_ticket_cache = {
         value: arguments[1],
@@ -19,12 +19,9 @@ var Api = function(conf) {
       };
     }
 
-
   } else {
-
     this.corpid = conf.corpid;
     this.secret = conf.secret;
-    this.SSOSecret = conf.SSOSecret;
     this.token_cache = null;
     this.jsapi_ticket_cache = null;
     this.getJsApiTicket = conf.getJsApiTicket;
@@ -295,33 +292,6 @@ Api.prototype.getUserInfoByCode = function(code, callback) {
   });
 };
 
-//=============================== SSO ===============================
-
-Api.prototype.getSSOToken = function(callback) {
-  var self = this;
-  agent.get(BASE_URL + '/sso/gettoken')
-    .query({
-      corpid: self.corpid,
-      corpsecret: self.SSOSecret
-    })
-    .end(util.wrapper(callback));
-};
-
-//登录
-Api.prototype.getSSOUserInfoByCode = function(code, callback) {
-  var self = this;
-  self.getSSOToken(function(err, token) {
-    if (err) {
-      return callback(err);
-    };
-    agent.get(BASE_URL + '/sso/getuserinfo')
-      .query({
-        code: code,
-        access_token: token.access_token
-      })
-      .end(util.wrapper(callback));
-  });
-};
 
 
 //=============================== jsApi Ticket ===============================
