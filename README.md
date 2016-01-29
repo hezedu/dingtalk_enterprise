@@ -63,14 +63,6 @@ var api = suiteCtrlE.ctrl(corpid, permanent_code, token_cache, jsapi_ticket_cach
 ```
 ___注___:ISV套件主动调用api见： [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
 
-如果你已经得到有效的token或token，jsapi_ticket,可以直接用access_token创建。
-```js
-//access_token 为 String 格式。
-var api = new DD_enterprise(access_token);
-//access_token,jsapi_ticket 为 String 格式。
-var api = new DD_enterprise(access_token, jsapi_ticket);
-```
-
 ##接口方法
 ####获得部门列表
 ```js
