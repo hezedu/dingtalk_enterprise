@@ -224,6 +224,26 @@ Api.prototype.sendToConversation = function(callback) {
   });
 };
 
+Api.prototype.send = function(agentid, to, msg, callback) {
+  var self = this;
+  self.getLatestToken(function(err, token) {
+    if (err) {
+      return callback(err);
+    };
+
+    for(var i in msg){
+      to[i]= msg[i];
+    }
+    to.agentid = agentid + '';
+    agent.post(BASE_URL + '/message/send')
+      .query({
+        access_token: token.value
+      })
+      .send(to)
+      .end(util.wrapper(callback));
+  });
+};
+
 //=============================== 用户 ===============================
 
 Api.prototype.getDepartmentUsers = function(id, callback) {
