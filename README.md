@@ -120,9 +120,9 @@ api.getUserInfoByCode(code, callback);
 //生成url授权参数。用于前端jsConfig.
 //只需传入一个url字符串参数，callback返回：
 /*
-signature: signature,
-timeStamp: result.timestamp.toString(),
-nonceStr: result.noncestr
+signature: '23sadfasdfasdf',
+timeStamp:'24234234234234',
+nonceStr:'asfdasdfasdfasfdx'
 */
 api.getUrlSign (url, callback);
 
