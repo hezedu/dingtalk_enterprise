@@ -64,22 +64,68 @@ var api = suiteCtrlE.ctrl(corpid, permanent_code, token_cache, jsapi_ticket_cach
 ___注___:ISV套件主动调用api见： [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
 
 ##接口方法
-####获得部门列表
+####部门
 ```js
-api.getDepartments(callback)
-```
-####获得部门详情
-```js
-api.getDepartmentDetail(id, callback)
-```
-####创建部门
-```js
-api.createDepartment(name, opts, callback)
+//获得部门列表
+api.getDepartments(callback);
+
+//获得部门详情
+api.getDepartmentDetail(id, callback);
+
+//创建部门
+api.createDepartment(name, opts, callback);
 //例
 //名字，父id
-api.createDepartment('部门一', 1, callback)
+api.createDepartment('部门一', 1, callback);
 //名字，详细配置
-api.createDepartment('部门一', {parentid: 1, order:1}, callback)
+api.createDepartment('部门一', {parentid: 1, order:1}, callback);
+
+//更新部门
+api.updateDepartment(id, opts, callback);
+
+//删除部门
+api.deleteDepartment(id, callback);
+
+```
+####微应用
+```js
+api.createMicroApp(data, callback);
+
+```
+####消息
+```js
+api.sendToConversation(callback);
+
+api.send(agentid, to, msg, callback);
+
+```
+####用户
+```js
+//获取部门用户
+api.getDepartmentUsers(id,callback);
+
+//获取部门用户详细
+api.getDepartmentUsersDetail(id,callback);
+
+//获取用户信息
+api.getUser(id, callback);
+
+//通过code获取用户一些信息(App登录用)。
+api.getUserInfoByCode(code, callback);
+
+```
+
+####jsApi
+```js
+//生成url授权参数。用于前端jsConfig.
+//只需传入一个url字符串参数，callback返回：
+/*
+signature: signature,
+timeStamp: result.timestamp.toString(),
+nonceStr: result.noncestr
+*/
+api.getUrlSign (url, callback);
+
 ```
 ##更多钉钉相关
 ISV套件主动调用API: [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)<br>
