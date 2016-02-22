@@ -446,7 +446,7 @@ Api.prototype.getUrlSign = function(url, callback) {
     var signature = sign(result);
     result = {
       signature: signature,
-      timeStamp: result.timestamp,
+      timeStamp: result.timestamp.toString(),
       nonceStr: result.noncestr
     }
     callback(null, result);
