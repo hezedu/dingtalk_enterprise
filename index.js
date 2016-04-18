@@ -91,6 +91,47 @@ Api.prototype.getLatestToken = function(callback) {
   }
 }
 
+//代理：get方法
+Api.prototype.get = function(path, data, callback){
+  var self = this;
+  self.getLatestToken(function(err, token) {
+    if (err) {
+      return callback(err);
+    };
+
+    if(typeof data === 'function'){
+      callback = data;
+      data = {};
+    }
+
+    data.access_token = token.value;
+    agent.get(BASE_URL + '/department/list')
+      .query(data)
+      .end(util.wrapper(callback));
+  });
+}
+
+//代理：post方法
+Api.prototype.post = function(path, data, callback){
+  var self = this;
+  self.getLatestToken(function(err, token) {
+    if (err) {
+      return callback(err);
+    };
+
+    if(typeof data === 'function'){
+      callback = data;
+      data = {};
+    }
+
+    agent.post(BASE_URL + '/department/list')
+      .query({
+        access_token: token.value
+      })
+      .send(data)
+      .end(util.wrapper(callback));
+  });
+}
 
 //=============================== 部门 ===============================
 
