@@ -18,10 +18,12 @@ var config = {
       callback(null, data);
     });
   },
+  
   saveToken : function(data, callback){
     //存储Token到数据库中，data样式为：{value: 'xxxxxxx', expires:1452735301543//过期时间}
     fs.writeFile(this.suiteid + 'token.txt',JSON.stringify(data), callback);
   },
+  
   getJsApiTicket : function(callback){
     //从数据库中取出JsApiTicket，返回的data样式为：{value: 'xxxxxxx', expires:1452735301543}
     fs.readFile(this.suiteid + 'JsApiTicket.txt',function(err, data){
@@ -32,6 +34,7 @@ var config = {
       callback(null, data);
     });
   },
+  
   saveJsApiTicket : function(data, callback){
     //存储JsApiTicket到数据库中，data样式为：{value: 'xxxxxxx', expires:1452735301543//过期时间}
     fs.writeFile(this.suiteid + 'JsApiTicket.txt',JSON.stringify(data), callback);
