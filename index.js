@@ -105,7 +105,7 @@ Api.prototype.get = function(path, data, callback){
     }
 
     data.access_token = token.value;
-    agent.get(BASE_URL + '/department/list')
+    agent.get(BASE_URL + path)
       .query(data)
       .end(util.wrapper(callback));
   });
@@ -124,7 +124,7 @@ Api.prototype.post = function(path, data, callback){
       data = {};
     }
 
-    agent.post(BASE_URL + '/department/list')
+    agent.post(BASE_URL + path)
       .query({
         access_token: token.value
       })

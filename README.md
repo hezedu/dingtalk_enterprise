@@ -66,6 +66,65 @@ var api = suiteCtrlE.ctrl(corpid, permanent_code, token_cache, jsapi_ticket_cach
 ___注___:ISV套件主动调用api见： [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
 
 ##接口方法
+###主要方法
+####api.getLatestToken(callback);
+获得最新token。
+```js
+//例:
+api.getLatestToken(function(err, token){
+  if(err){
+   return console.error(err);
+  }
+  //token格式为：{value: 'xxxxxxx', expires:1452735301543//过期时间}
+  console.log('token',token);
+});
+```
+####api.getUrlSign(url, callback);
+生成url授权参数，用于前端jsConfig.
+```js
+//例:
+api.getUrlSign('http://www.test.com/path', function(err, result){
+  if(err){
+    return console.error('error', err);
+  }
+  /*
+  result格式为：{
+    signature: '23sadfasdfasdf',
+    timeStamp:'24234234234234',
+    nonceStr:'asfdasdfasdfasfdx'
+  }
+  */
+  console.log('result',result);
+});
+```
+####api.get(ddApiPath, opts, callback);
+代理get方法。使有此方法可调用钉钉官方企业号文档的get接口，而不用管token。
+```js
+//例:
+//获取部门列表
+//钉钉文档：http://ddtalk.github.io/dingTalkDoc/?spm=a3140.7785475.0.0.p5bAUd#获取部门列表
+api.get('/department/list', function(err, result){
+  if(err){
+    return console.error('err', err);
+  }
+  console.log('result', result);
+});
+
+//获取部门详情
+//钉钉文档：http://ddtalk.github.io/dingTalkDoc/?spm=a3140.7785475.0.0.p5bAUd#获取部门详情
+api.get('/department/get', {id:2}, function(err, result){
+  if(err){
+    return console.error('err', err);
+  }
+  console.log('result', result);
+});
+```
+####api.post(ddApiPath, opts, callback);
+代理post方法。使有此方法可调用钉钉官方企业号文档的post接口，而不用管token。
+
+用法同api.get。
+
+###其它封装的一些方法。
 ####部门
 ```js
 //获得部门列表
@@ -116,19 +175,8 @@ api.getUser(id, callback);
 api.getUserInfoByCode(code, callback);
 
 ```
+具体详情请参照[阿里钉钉文档](http://ddtalk.github.io/dingTalkDoc/?spm=a3140.7785475.0.0.p5bAUd#服务端开发文档)
 
-####jsApi
-```js
-//生成url授权参数。用于前端jsConfig.
-//只需传入一个url字符串参数，callback返回：
-/*
-signature: '23sadfasdfasdf',
-timeStamp:'24234234234234',
-nonceStr:'asfdasdfasdfasfdx'
-*/
-api.getUrlSign(url, callback);
-
-```
 ##更多钉钉相关
 ISV套件主动调用API: [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)<br>
 ISV套件回调server: [dingtalk_suite_callback](https://github.com/hezedu/dingtalk_suite_callback)<br>
