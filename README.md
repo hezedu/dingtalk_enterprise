@@ -74,6 +74,7 @@ ___注___:ISV套件主动调用api见： [dingtalk_suite](https://github.com/hez
 ##代理中间件
 ### api.agentMiddleware
 完全的代理模式，此方法可调用钉钉官方企业号文档的所有接口，而不用管token。
+服务端示例:
 ```js
 //例:
 //如果是express，什么也不用参数。
@@ -108,7 +109,7 @@ $.get('/agent' + api, function(data){
 ```
 
 ***注意***
-agentMiddleware为新添加方法，是纯代理模式，跟之前老方法返回结果和略有不同：它不再判断钉钉errcode了，它返回的结果跟钉钉一样。比如说钉钉返回errcode = 1,之前老方法会报错，而agentMiddleware则不会。
+agentMiddleware为新添加方法，是纯代理模式，跟之前老方法在错误处理上略有不同：它不再判断钉钉errcode了，它返回的结果跟钉钉一样。比如说钉钉返回errcode = 1,之前老方法会报错，而agentMiddleware则不会。
 
 ##接口方法
 ###主要方法
