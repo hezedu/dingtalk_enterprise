@@ -1,6 +1,6 @@
 {
   "name": "dingtalk_enterprise",
-  "version": "1.9.9",
+  "version": "1.9.11",
   "main": "index",
   "keywords": [
     "dingtalk",
@@ -16,6 +16,7 @@
     "url": "git+https://github.com/hezedu/dingtalk_enterprise.git"
   },
   "dependencies": {
+    "request": "^2.74.0",
     "superagent": "^1.6.1"
   },
   "licenses": "MIT",
