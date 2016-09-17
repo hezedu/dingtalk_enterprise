@@ -99,20 +99,21 @@ Api.prototype.getLatestToken = function(callback) {
 Api.prototype.agentMiddleware = function(notExpress){
   var self = this;
 
-  return function(req, res){
+  return function(req, res, next){
     var method;
     var path;
     if(notExpress){
-      var parem = notExpress(req);
+      var parem = notExpress.apply(null, arguments);
       method = parem.method;
       path = parem.url;
+      next = parem.errhandler;
     }else{
       method = req.method;
       path = req.url;
     }
     self.getLatestToken(function(err, token) {
       if (err) {
-        return callback(err);
+        return next(err);
       };
       var x = request[method.toLowerCase()](BASE_URL + pathParse(path) + 'access_token=' + token.value);
       req.pipe(x);

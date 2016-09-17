@@ -82,10 +82,11 @@ app.use('/agent', api.agentMiddleware());
 
 //不是express 怎么办？
 app.use('/agent', api.agentMiddleware(
-  function(req){ //该方法必须是同步的。
+  function(req, res){ //该方法必须是同步的。
     return {
-      method: req.method, //钉钉的api方法。
-      url: req.url //钉钉的api的路径。
+      method: req.method, //钉钉的api方法。 必须
+      url: req.url, //钉钉的api的路径。 必须
+      errhandler: function(err){ }//错误处理 必须
     }}));
 ```
 客户端仿问ajax示例:
@@ -105,7 +106,9 @@ $.get('/agent' + api, function(data){
   <input type="submit" value="提交">
 </form>
 ```
-
+###注意
+agentMiddleware为新添加方法，是纯代理模式，它不再判断errcode了。比如说钉钉返回errcode = 1,
+老方法会包含在error，而agentMiddleware则不会。
 
 ##接口方法
 ###主要方法
