@@ -106,9 +106,9 @@ $.get('/agent' + api, function(data){
   <input type="submit" value="提交">
 </form>
 ```
-###注意
-agentMiddleware为新添加方法，是纯代理模式，它不再判断errcode了。比如说钉钉返回errcode = 1,
-老方法会包含在error，而agentMiddleware则不会。
+
+***注意***
+agentMiddleware为新添加方法，是纯代理模式，跟之前老方法返回结果和略有不同：它不再判断钉钉errcode了，它返回的结果跟钉钉一样。比如说钉钉返回errcode = 1,之前老方法会报错，而agentMiddleware则不会。
 
 ##接口方法
 ###主要方法
@@ -142,7 +142,7 @@ api.getUrlSign('http://www.test.com/path', function(err, result){
   console.log('result',result);
 });
 ```
-#以下方法不推荐使用，只用上面的agentMiddleware足够了。将可能在下版废弃。
+#以下方法不再推荐使用，只用上面的agentMiddleware足够了。
 ####api.get(ddApiPath, opts, callback);
 代理get方法。使有此方法可调用钉钉官方企业号文档的get接口，而不用管token。
 ```js
