@@ -1,6 +1,8 @@
 var agent = require('superagent');
+var request = require('request');
 var crypto = require('crypto');
 var util = require('./util');
+var pathParse = util.pathParse;
 var BASE_URL = 'https://oapi.dingtalk.com';
 var TOKEN_EXPIRES_IN = 1000 * 60 * 60 * 2 - 10000 //1小时59分50秒.防止网络延迟
 
@@ -91,6 +93,34 @@ Api.prototype.getLatestToken = function(callback) {
   }
 }
 
+//代理中间件：post方法
+// request.POST = request.post;
+// request.GET = request.get;
+Api.prototype.agentMiddleware = function(notExpress){
+  var self = this;
+
+  return function(req, res){
+    var method;
+    var path;
+    if(notExpress){
+      var parem = notExpress(req);
+      method = parem.method;
+      path = parem.url;
+    }else{
+      method = req.method;
+      path = req.url;
+    }
+    self.getLatestToken(function(err, token) {
+      if (err) {
+        return callback(err);
+      };
+      var x = request[method.toLowerCase()](BASE_URL + pathParse(path) + 'access_token=' + token.value);
+      req.pipe(x);
+      x.pipe(res);
+    });
+  }
+}
+
 //代理：get方法
 Api.prototype.get = function(path, data, callback){
   var self = this;
@@ -111,27 +141,7 @@ Api.prototype.get = function(path, data, callback){
   });
 }
 
-//代理：post方法
-Api.prototype.post = function(path, data, callback){
-  var self = this;
-  self.getLatestToken(function(err, token) {
-    if (err) {
-      return callback(err);
-    };
 
-    if(typeof data === 'function'){
-      callback = data;
-      data = {};
-    }
-
-    agent.post(BASE_URL + path)
-      .query({
-        access_token: token.value
-      })
-      .send(data)
-      .end(util.wrapper(callback));
-  });
-}
 
 //=============================== 部门 ===============================
 

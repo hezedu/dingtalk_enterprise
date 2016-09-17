@@ -18,3 +18,14 @@ exports.wrapper = function (callback) {
     callback(null, data);
   };
 };
+exports.pathParse = function (path) {
+  if(path.indexOf('?') === -1){
+    path = path + '?';
+  }else{
+    var l = path.length - 1;
+    if(path[l] !== '&'){
+      path = path + '&';
+    }
+  }
+  return path;
+}
