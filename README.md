@@ -110,6 +110,17 @@ $.get('/agent' + api, function(data){
 
 ***注意***
 agentMiddleware为新添加方法，是纯代理模式，跟之前老方法在错误处理上略有不同：它不再判断钉钉errcode了，它返回的结果跟钉钉一样。比如说钉钉返回errcode = 1,之前老方法会报错，而agentMiddleware则不会。
+###套件代理方法
+示例：
+```js
+app.use('/agent/:corpid', function(req, res, next){
+  var corpid = req.params.corpid;
+  var permanent_code = '自行获取';
+  var api = suiteCtrlE.ctrl(corpid, permanent_code);
+  api.agentMiddleware()(req, res, next);
+});
+
+```
 
 ##接口方法
 ###主要方法
@@ -143,7 +154,7 @@ api.getUrlSign('http://www.test.com/path', function(err, result){
   console.log('result',result);
 });
 ```
-#以下方法不再推荐使用，只用上面的agentMiddleware足够了。
+
 ####api.get(ddApiPath, opts, callback);
 代理get方法。使有此方法可调用钉钉官方企业号文档的get接口，而不用管token。
 ```js
@@ -171,6 +182,14 @@ api.get('/department/get', {id:2}, function(err, result){
 
 用法同api.get。
 
+具体详情请参照[阿里钉钉文档](http://ddtalk.github.io/dingTalkDoc/?spm=a3140.7785475.0.0.p5bAUd#服务端开发文档)
+
+##更多钉钉相关
+ISV套件主动调用API: [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)<br>
+ISV套件回调server: [dingtalk_suite_callback](https://github.com/hezedu/dingtalk_suite_callback)<br>
+ISV SSO 免登API: [dingtalk_sso](https://github.com/hezedu/dingtalk_sso)
+
+#以下方法不再推荐使用，只用上面的agentMiddleware足够了。
 ###其它封装的一些方法。
 ####部门
 ```js
@@ -222,9 +241,4 @@ api.getUser(id, callback);
 api.getUserInfoByCode(code, callback);
 
 ```
-具体详情请参照[阿里钉钉文档](http://ddtalk.github.io/dingTalkDoc/?spm=a3140.7785475.0.0.p5bAUd#服务端开发文档)
 
-##更多钉钉相关
-ISV套件主动调用API: [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)<br>
-ISV套件回调server: [dingtalk_suite_callback](https://github.com/hezedu/dingtalk_suite_callback)<br>
-ISV SSO 免登API: [dingtalk_sso](https://github.com/hezedu/dingtalk_sso)
