@@ -111,7 +111,7 @@ $.get('/agent' + api, function(data){
 ***注意***
 agentMiddleware为新添加方法，是纯代理模式，跟之前老方法在错误处理上略有不同：它不再判断钉钉errcode了，它返回的结果跟钉钉一样。比如说钉钉返回errcode = 1,之前老方法会报错，而agentMiddleware则不会。
 ###套件代理方法
-示例：
+示例(express)：
 ```js
 app.use('/agent/:corpid', function(req, res, next){
   var corpid = req.params.corpid;
