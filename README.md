@@ -114,13 +114,15 @@ agentMiddleware为新添加方法，是纯代理模式，跟之前老方法在�
 ###套件代理方法
 示例(express)：
 ```js
+//服务器端
 app.use('/agent/:corpid', function(req, res, next){
   var corpid = req.params.corpid;
   var permanent_code = '自行获取';
   var api = suiteCtrlE.ctrl(corpid, permanent_code);
   api.agentMiddleware()(req, res, next);
 });
-
+```
+```js
 //客户端AJAX示例:
 //获取部门列表
 var corpid = 'wxxxxxxxxxxxx'
@@ -197,6 +199,11 @@ api.getLatestToken(function(err, token){
 ISV套件主动调用API: [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)<br>
 ISV套件回调server: [dingtalk_suite_callback](https://github.com/hezedu/dingtalk_suite_callback)<br>
 ISV SSO 免登API: [dingtalk_sso](https://github.com/hezedu/dingtalk_sso)
+
+
+
+
+
 
 ##以下方法不再推荐使用，只用上面的agentMiddleware足够了。
 ###其它封装的一些方法。
