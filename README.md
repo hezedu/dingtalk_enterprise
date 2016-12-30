@@ -198,7 +198,7 @@ ISV套件主动调用API: [dingtalk_suite](https://github.com/hezedu/dingtalk_su
 ISV套件回调server: [dingtalk_suite_callback](https://github.com/hezedu/dingtalk_suite_callback)<br>
 ISV SSO 免登API: [dingtalk_sso](https://github.com/hezedu/dingtalk_sso)
 
-#以下方法不再推荐使用，只用上面的agentMiddleware足够了。
+##以下方法不再推荐使用，只用上面的agentMiddleware足够了。
 ###其它封装的一些方法。
 ####部门
 ```js
