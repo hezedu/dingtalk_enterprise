@@ -51,7 +51,9 @@ var config = {
 ```js
 var api = new DD_enterprise(config);
 ```
-###用ISV套件操作企业号？OK
+
+###ISV套件操作企业号
+需要[dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
 只需要两个参数：
 ```js
 //newSuiteApi: 一个dingtalk_suite实例。
@@ -69,7 +71,6 @@ var api = suiteCtrlE.ctrl(corpid, permanent_code, token_cache);
 //token和jsapi_ticket_cache为Object格式 key为: value , expires
 var api = suiteCtrlE.ctrl(corpid, permanent_code, token_cache, jsapi_ticket_cache);
 ```
-___注___:ISV套件主动调用api见： [dingtalk_suite](https://github.com/hezedu/dingtalk_suite)
 
 ##代理中间件
 ### api.agentMiddleware
@@ -131,18 +132,7 @@ $.get('/agent/' + corpid + '/' + api, function(data){
 
 ##接口方法
 ###主要方法
-####api.getLatestToken(callback);
-获得最新token。
-```js
-//例:
-api.getLatestToken(function(err, token){
-  if(err){
-   return console.error(err);
-  }
-  //token格式为：{value: 'xxxxxxx', expires:1452735301543//过期时间}
-  console.log('token',token);
-});
-```
+
 ####api.getUrlSign(url, callback);
 生成url授权参数，用于前端jsConfig.
 ```js
@@ -161,7 +151,6 @@ api.getUrlSign('http://www.test.com/path', function(err, result){
   console.log('result',result);
 });
 ```
-
 ####api.get(ddApiPath, opts, callback);
 代理get方法。使有此方法可调用钉钉官方企业号文档的get接口，而不用管token。
 ```js
@@ -188,6 +177,19 @@ api.get('/department/get', {id:2}, function(err, result){
 代理post方法。使有此方法可调用钉钉官方企业号文档的post接口，而不用管token。
 
 用法同api.get。
+
+####api.getLatestToken(callback);
+获得最新token。
+```js
+//例:
+api.getLatestToken(function(err, token){
+  if(err){
+   return console.error(err);
+  }
+  //token格式为：{value: 'xxxxxxx', expires:1452735301543//过期时间}
+  console.log('token',token);
+});
+```
 
 具体详情请参照[阿里钉钉文档](http://ddtalk.github.io/dingTalkDoc/?spm=a3140.7785475.0.0.p5bAUd#服务端开发文档)
 
