@@ -90,7 +90,7 @@ app.use('/agent', api.agentMiddleware(
       errhandler: function(err){ }//错误处理 必须
     }}));
 ```
-客户端仿问ajax示例:
+#### 使用代理客户端仿问ajax示例:
 ```js
 //获取部门列表
 //钉钉文档：https://open-doc.dingtalk.com/docs/doc.htm?spm=a219a.7629140.0.0.9aG2FM&treeId=172&articleId=104979&docType=1 获取部门列表
@@ -99,7 +99,7 @@ $.get('/agent' + api, function(data){
   console.log('data', data);
 });
 ```
-#### 上传文件示例：
+#### 使用代理上传文件示例：
 ```html
 <form action="/agent/media/upload" method="post" enctype="multipart/form-data">
   <input name="type" value="image">
@@ -120,6 +120,13 @@ app.use('/agent/:corpid', function(req, res, next){
   api.agentMiddleware()(req, res, next);
 });
 
+//客户端AJAX示例:
+//获取部门列表
+var corpid = 'wxxxxxxxxxxxx'
+var api = '/department/list'; //跟钉钉的一样。
+$.get('/agent/' + corpid + '/' + api, function(data){
+  console.log('data', data);
+});
 ```
 
 ##接口方法
